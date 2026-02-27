@@ -75,10 +75,11 @@ def update_student(student_id):
         if not name or not course or mark is None: # should be handled by frontend validation, but just in case :P
             return jsonify({"error": "Missing required fields"}), 404
 
-        db.update_student(student_id, name, course, mark)
-        return jsonify(student_data), 200
-    except Exception:
-        return jsonify({"error": "Invalid request body"}), 404
+        updated = db.update_student(student_id, name, course, mark)
+        return jsonify(updated), 200
+    except Exception as e:
+        print("UPDATE ERROR:", e)   # debugging visibility
+        return jsonify({"error": str(e)}), 500
 
 
 @app.route("/students/<int:student_id>", methods=["DELETE"])
