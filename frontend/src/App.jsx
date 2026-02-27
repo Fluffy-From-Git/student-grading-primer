@@ -74,7 +74,7 @@ export default function App() {
       </header>
 
       <main className="main">
-        <Stats />
+        <Stats refreshKey={students} />
         <section className="card form-card">
           <h2>Add student</h2>
           <StudentForm onSubmit={handleCreate} />
