@@ -1,64 +1,70 @@
-import { useState, useEffect } from 'react'
-import { getStudents, createStudent, updateStudent, deleteStudent } from './api'
-import StudentForm from './components/StudentForm'
-import StudentTable from './components/StudentTable'
-import EditStudentModal from './components/EditStudentModal'
-import './App.css'
+import { useState, useEffect } from "react";
+import {
+  getStudents,
+  createStudent,
+  updateStudent,
+  deleteStudent,
+} from "./api";
+import StudentForm from "./components/StudentForm";
+import StudentTable from "./components/StudentTable";
+import EditStudentModal from "./components/EditStudentModal";
+import "./App.css";
+import Stats from "./components/Stats";
 
 export default function App() {
-  const [students, setStudents] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
-  const [editing, setEditing] = useState(null)
+  const [students, setStudents] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [editing, setEditing] = useState(null);
 
   const load = async () => {
-    setLoading(true)
-    setError(null)
+    setLoading(true);
+    setError(null);
     try {
-      const data = await getStudents()
-      setStudents(data)
+      const data = await getStudents();
+      setStudents(data);
     } catch (e) {
-      setError(e.message)
+      setError(e.message);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
-    load()
-  }, [])
+    load();
+  }, []);
 
   const handleCreate = async (student) => {
-    setError(null)
+    setError(null);
     try {
-      const created = await createStudent(student)
-      setStudents((prev) => [...prev, created])
+      const created = await createStudent(student);
+      setStudents((prev) => [...prev, created]);
     } catch (e) {
-      setError(e.message)
+      setError(e.message);
     }
-  }
+  };
 
   const handleUpdate = async (id, student) => {
-    setError(null)
+    setError(null);
     try {
-      const updated = await updateStudent(id, student)
-      setStudents((prev) => prev.map((s) => (s.id === id ? updated : s)))
-      setEditing(null)
+      const updated = await updateStudent(id, student);
+      setStudents((prev) => prev.map((s) => (s.id === id ? updated : s)));
+      setEditing(null);
     } catch (e) {
-      setError(e.message)
+      setError(e.message);
     }
-  }
+  };
 
   const handleDelete = async (id) => {
-    setError(null)
+    setError(null);
     try {
-      await deleteStudent(id)
-      setStudents((prev) => prev.filter((s) => s.id !== id))
-      if (editing?.id === id) setEditing(null)
+      await deleteStudent(id);
+      setStudents((prev) => prev.filter((s) => s.id !== id));
+      if (editing?.id === id) setEditing(null);
     } catch (e) {
-      setError(e.message)
+      setError(e.message);
     }
-  }
+  };
 
   return (
     <div className="app">
@@ -68,8 +74,9 @@ export default function App() {
       </header>
 
       <main className="main">
+        <Stats refreshKey={students} />
         <section className="card form-card">
-          <h2>Add tutor</h2>
+          <h2>Add student</h2>
           <StudentForm onSubmit={handleCreate} />
         </section>
 
@@ -80,7 +87,7 @@ export default function App() {
         )}
 
         <section className="card table-card">
-          <h2>Tutors</h2>
+          <h2>Students table</h2>
           {loading ? (
             <p className="loading">Loading…</p>
           ) : (
@@ -101,5 +108,5 @@ export default function App() {
         />
       )}
     </div>
-  )
+  );
 }
