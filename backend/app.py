@@ -43,11 +43,11 @@ def create_student():
         course = student_data.get("course")
         mark = student_data.get("mark")
 
-        if not name or not course or mark is None: # should be handled by frontend validation, but just in case :P
+        if not name or not course: # should be handled by frontend validation, but just in case :P
             return jsonify({"error": "Missing required fields"}), 404
 
-        db.insert_student(name, course, mark)
-        return jsonify(student_data), 200
+        created_student = db.insert_student(name, course, mark)
+        return jsonify(created_student), 200
     except Exception:
         return jsonify({"error": "Invalid request body"}), 404
 
